@@ -101,7 +101,6 @@
 		2BE183B71971A5DA00EE9DD7 /* SimpliSafe-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "SimpliSafe-Info.plist"; sourceTree = "<group>"; };
 		2BE183B91971A5DA00EE9DD7 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		2BE183BB1971A5DA00EE9DD7 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
-		2BE183BD1971A5DA00EE9DD7 /* SimpliSafe-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "SimpliSafe-Prefix.pch"; sourceTree = "<group>"; };
 		2BE183BE1971A5DA00EE9DD7 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		2BE183BF1971A5DA00EE9DD7 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
 		2BE183C21971A5DA00EE9DD7 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
@@ -129,6 +128,7 @@
 		2BE184161974382000EE9DD7 /* LocationsListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LocationsListViewController.m; sourceTree = "<group>"; };
 		6522AD119784415A67C7B919 /* Pods.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.debug.xcconfig; path = "Pods/Target Support Files/Pods/Pods.debug.xcconfig"; sourceTree = "<group>"; };
 		A754A0A11B4E22C4002D0F4D /* Launch Screen.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = "Launch Screen.xib"; sourceTree = "<group>"; };
+		A754A0A71B4F6B31002D0F4D /* SimpliSafe-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "SimpliSafe-Bridging-Header.h"; sourceTree = "<group>"; };
 		BCEBE62F0AA4AC574C90D5AB /* Pods.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.release.xcconfig; path = "Pods/Target Support Files/Pods/Pods.release.xcconfig"; sourceTree = "<group>"; };
 		C76C717EB36F4E52A2B6940E /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -259,6 +259,7 @@
 				2BE183BF1971A5DA00EE9DD7 /* AppDelegate.m */,
 				2BE183C71971A5DA00EE9DD7 /* Images.xcassets */,
 				A754A0A11B4E22C4002D0F4D /* Launch Screen.xib */,
+				A754A0A71B4F6B31002D0F4D /* SimpliSafe-Bridging-Header.h */,
 				2BE183B61971A5DA00EE9DD7 /* Supporting Files */,
 				2BC189E2197A15E30095999F /* Constants.h */,
 			);
@@ -271,7 +272,6 @@
 				2BE183B71971A5DA00EE9DD7 /* SimpliSafe-Info.plist */,
 				2BE183B81971A5DA00EE9DD7 /* InfoPlist.strings */,
 				2BE183BB1971A5DA00EE9DD7 /* main.m */,
-				2BE183BD1971A5DA00EE9DD7 /* SimpliSafe-Prefix.pch */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
@@ -655,10 +655,12 @@
 			baseConfigurationReference = 6522AD119784415A67C7B919 /* Pods.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "SimpliSafe/SimpliSafe-Prefix.pch";
+				CLANG_ENABLE_MODULES = YES;
 				INFOPLIST_FILE = "SimpliSafe/SimpliSafe-Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "SimpliSafe/SimpliSafe-Bridging-Header.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
@@ -668,10 +670,11 @@
 			baseConfigurationReference = BCEBE62F0AA4AC574C90D5AB /* Pods.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "SimpliSafe/SimpliSafe-Prefix.pch";
+				CLANG_ENABLE_MODULES = YES;
 				INFOPLIST_FILE = "SimpliSafe/SimpliSafe-Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "SimpliSafe/SimpliSafe-Bridging-Header.h";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;
@@ -685,8 +688,6 @@
 					"$(inherited)",
 					"$(DEVELOPER_FRAMEWORKS_DIR)",
 				);
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "SimpliSafe/SimpliSafe-Prefix.pch";
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
 					"$(inherited)",
@@ -707,8 +708,6 @@
 					"$(inherited)",
 					"$(DEVELOPER_FRAMEWORKS_DIR)",
 				);
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "SimpliSafe/SimpliSafe-Prefix.pch";
 				INFOPLIST_FILE = "SimpliSafeTests/SimpliSafeTests-Info.plist";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TEST_HOST = "$(BUNDLE_LOADER)";

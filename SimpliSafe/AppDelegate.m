@@ -11,6 +11,7 @@
 
 #import "SSAPIClient.h"
 #import "SSUserManager.h"
+#import "Constants.h"
 
 @implementation AppDelegate
 

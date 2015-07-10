@@ -22,6 +22,7 @@
 
 #import "AlarmButtonsView.h"
 #import "SVProgressHUD.h"
+#import "Constants.h"
 
 @interface DashboardViewController () <LoginDelegate, LocationChangeDelegate>
 

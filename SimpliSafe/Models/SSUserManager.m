@@ -11,6 +11,7 @@
 
 #import "AFNetworkReachabilityManager.h"
 #import "MMKeychain.h"
+#import "Constants.h"
 
 @implementation SSUserManager
 

@@ -12,6 +12,7 @@
 #import "SSLocation.h"
 #import "SSEvent.h"
 #import "SSDashboard.h"
+#import "Constants.h"
 
 @implementation SSAPIClient
 

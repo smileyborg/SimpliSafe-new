@@ -14,6 +14,7 @@
 
 #import "SVProgressHUD.h"
 #import "EventsTableViewCell.h"
+#import "Constants.h"
 
 @interface EventsListViewController ()
 
