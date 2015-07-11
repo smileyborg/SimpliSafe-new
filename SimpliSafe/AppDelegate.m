@@ -12,6 +12,13 @@
 #import "SSAPIClient.h"
 #import "SSUserManager.h"
 #import "Constants.h"
+#import "SimpliSafe-Swift.h"
+
+@interface AppDelegate ()
+
+@property (nonatomic, strong) GeofenceManager *geofenceManager;
+
+@end
 
 @implementation AppDelegate
 
@@ -26,6 +33,22 @@
         // If the status is greater than zero, the network is reachable
         [[SSUserManager sharedManager] setNetworkIsReachable:(status > 0)];
         [[SSAPIClient sharedClient] setNetworkIsReachable:(status > 0)];
+    }];
+    
+    // Set up the geofence manager at app launch so that we'll be able to handle notifications when the app is launched due to
+    // a region entry/exit event.
+    self.geofenceManager = [[GeofenceManager alloc] initWithHandler:^(BOOL entered) {
+        NSString *desiredStateName = entered ? @"off" : @"away";
+        SSUserManager *userManager = [SSUserManager sharedManager];
+        NSAssert(userManager.lastSessionToken, @"Geofence Boundary Handler: No last session token!");
+        NSAssert(userManager.user, @"Geofence Boundary Handler: No user!");
+        SSAPIClient *client = [SSAPIClient sharedClient];
+        [client changeStateForLocation:userManager.currentLocation
+                                  user:userManager.user
+                                 state:desiredStateName
+                            completion:^(SSSystemState systemState, NSError *error) {
+                                
+                            }];
     }];
     
     return YES;
