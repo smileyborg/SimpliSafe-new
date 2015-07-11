@@ -137,6 +137,8 @@ extension GeofenceManager: CLLocationManagerDelegate {
             callPermissionCompletionHandlers(.Denied)
         case .Restricted:
             callPermissionCompletionHandlers(.Restricted)
+        case .NotDetermined:
+            return; // don't care about this
         default:
             assertionFailure("Unexpected authorization status change: \(status)")
         }
