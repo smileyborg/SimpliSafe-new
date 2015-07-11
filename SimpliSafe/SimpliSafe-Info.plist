@@ -26,8 +26,6 @@
 	<true/>
 	<key>NSLocationAlwaysUsageDescription</key>
 	<string>SimpliSafe uses your location to automatically arm and disarm your alarm.</string>
-	<key>UIApplicationExitsOnSuspend</key>
-	<true/>
 	<key>UIBackgroundModes</key>
 	<array>
 		<string>location</string>
