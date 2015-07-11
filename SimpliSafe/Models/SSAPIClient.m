@@ -189,7 +189,7 @@
             newStateName = @"away";
             break;
         default:
-            NSAssert(nil, @"Invalid system state: %ld", newState);
+            NSAssert(nil, @"Invalid system state: %ld", (long)newState);
             return nil;
     }
     
