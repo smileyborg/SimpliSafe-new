@@ -34,7 +34,7 @@
 
 - (NSURLSessionDataTask *)changeStateForLocation:(SSLocation *)location
                                             user:(SSUser *)user
-                                           state:(NSString *)newStateName
+                                           state:(SSSystemState)newState
                                       completion:(void(^)(SSSystemState systemState, NSError *error))completion;
 
 @end

@@ -172,11 +172,27 @@
 
 - (NSURLSessionDataTask *)changeStateForLocation:(SSLocation *)location
                                             user:(SSUser *)user
-                                           state:(NSString *)newStateName
+                                           state:(SSSystemState)newState
                                       completion:(void(^)(SSSystemState systemState, NSError *error))completion
 {
     NSString *urlString = [NSString stringWithFormat:@"/mobile/%@/sid/%@/set-state", user.userID, location.locationID];
-
+    
+    NSString *newStateName;
+    switch (newState) {
+        case SSSystemStateOff:
+            newStateName = @"off";
+            break;
+        case SSSystemStateHome:
+            newStateName = @"home";
+            break;
+        case SSSystemStateAway:
+            newStateName = @"away";
+            break;
+        default:
+            NSAssert(nil, @"Invalid system state: %ld", newState);
+            return nil;
+    }
+    
     NSDictionary *postParams =
     @{
         @"no_persist": @"0",

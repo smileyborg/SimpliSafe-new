@@ -212,20 +212,20 @@
 {
     UIButton *button = (UIButton *)sender;
     NSString *status;
-    NSString *desiredStateName;
+    SSSystemState newState;
     
     switch (button.tag) {
         case SSSystemStateOff:
             status = @"Disarming System";
-            desiredStateName = @"off";
+            newState = SSSystemStateOff;
             break;
         case SSSystemStateHome:
             status = @"Arming System: Home";
-            desiredStateName = @"home";
+            newState = SSSystemStateHome;
             break;
         case SSSystemStateAway:
             status = @"Arming System: Away";
-            desiredStateName = @"away";
+            newState = SSSystemStateAway;
             break;
         default:
             return;
@@ -241,7 +241,7 @@
     
     [client changeStateForLocation:userManager.currentLocation
                               user:userManager.user
-                             state:desiredStateName
+                             state:newState
                         completion:^(SSSystemState systemState, NSError *error)
     {
         if (error)
