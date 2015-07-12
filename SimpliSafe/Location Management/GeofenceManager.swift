@@ -9,7 +9,7 @@
 import CoreLocation
 
 /** The possible states that location services can be in. */
-public enum LocationServicesState {
+@objc public enum LocationServicesState: NSInteger {
     /** User has already granted this app permissions to access location services, and they are enabled and ready for use by this app. */
     case Available
     /** User has not yet responded to the dialog that grants this app permission to access location services. */
@@ -50,6 +50,18 @@ A closure that is executed when the device exits or enters a geofence region.
 */
 public typealias GeofenceBoundaryCrossedHandler = (entered: Bool) -> Void
 
+/**
+A closure that is executed whenever a region monitoring error occurs.
+
+:param: error   The CLError that occurred.
+*/
+public typealias GeofenceErrorHandler = (error: CLError) -> Void
+
+/**
+A closure that is executed when the location services permissions have been determined.
+
+:param: state   The current state of location services for this app.
+*/
 public typealias LocationServicesPermissionCompletionHandler = (state: LocationServicesState) -> Void
 
 /**
@@ -60,16 +72,25 @@ public class GeofenceManager: NSObject {
     
     /// A closure that is executed whenever the geofence's boundary is crossed.
     private let boundaryCrossedHandler: GeofenceBoundaryCrossedHandler
+    /// A closure that is executed whenever a region monitoring error occurs.
+    private let errorHandler: GeofenceErrorHandler
     
     /**
-    Designated initializer. Creates a new geofence manager.
+    Designated initializer. Creates a new geofence manager and registers the closures to be called when
+    the device enters or exits the geofence region.
+    
+    In order for the geofence manager to receive region monitoring events even when the app is terminated,
+    this class should be initialized inside the app delegate method -[application:didFinishLaunchingWithOptions:].
     
     :param: handler     The handler to call whenever the device enters or exits the geofence region.
+    :param: error       The handler to call if there is a region monitoring error.
     */
-    public init(handler: GeofenceBoundaryCrossedHandler) {
+    public init(handler: GeofenceBoundaryCrossedHandler, error: GeofenceErrorHandler) {
         boundaryCrossedHandler = handler
+        errorHandler = error
         super.init()
         locationManager.delegate = self
+        println("GeofenceManager initializing with existing geofence: \(geofence)")
     }
     
     /// An array of completion handlers to call with the new location services permissions state
@@ -106,21 +127,30 @@ public class GeofenceManager: NSObject {
     }
     
     /**
-    Adds a new geofence. Any existing geofence will be removed before the new geofence is added.
-    
-    :param: region  The region to establish a geofence for.
+    Accessor for the geofenced region. Setting a new geofence will remove any existing geofence.
     */
-    public func addGeofence(region: CLCircularRegion) {
-        removeGeofence()
-        locationManager.startMonitoringForRegion(region)
+    var geofence: CLCircularRegion? {
+        get {
+            let firstRegionObj = locationManager.monitoredRegions.first
+            if let firstRegion = firstRegionObj as? CLCircularRegion {
+                return firstRegion
+            }
+            return nil
+        }
+        set(newRegion) {
+            removeExistingGeofence()
+            if (newRegion != nil) {
+                locationManager.startMonitoringForRegion(newRegion)
+            }
+        }
     }
     
     /**
     Removes any existing geofence.
     */
-    public func removeGeofence() {
+    private func removeExistingGeofence() {
         for regionObj in locationManager.monitoredRegions {
-            if let region = regionObj as? CLRegion {
+            if let region = regionObj as? CLCircularRegion {
                 locationManager.stopMonitoringForRegion(region)
             }
         }
@@ -138,7 +168,7 @@ extension GeofenceManager: CLLocationManagerDelegate {
         case .Restricted:
             callPermissionCompletionHandlers(.Restricted)
         case .NotDetermined:
-            return; // don't care about this
+            return // don't care about this
         default:
             assertionFailure("Unexpected authorization status change: \(status)")
         }
@@ -153,17 +183,19 @@ extension GeofenceManager: CLLocationManagerDelegate {
     }
     
     public func locationManager(manager: CLLocationManager!, monitoringDidFailForRegion region: CLRegion!, withError error: NSError!) {
-        switch CLError(rawValue: error.code)! {
+        let clError = CLError(rawValue: error.code)!
+        switch clError {
         case .RegionMonitoringDenied:
-            print("Region monitoring denied!")
+            println("Region monitoring denied!")
         case .RegionMonitoringFailure:
-            print("Region monitoring failure!")
+            println("Region monitoring failure!")
         case .RegionMonitoringSetupDelayed:
-            print("Region monitoring setup delayed!")
+            println("Region monitoring setup delayed!")
         case .RegionMonitoringResponseDelayed:
-            print("Region monitoring response delayed!")
+            println("Region monitoring response delayed!")
         default:
             assertionFailure("Unexpected error: \(error)")
         }
+        errorHandler(error: clError)
     }
 }
