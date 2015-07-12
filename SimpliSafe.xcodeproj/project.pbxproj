@@ -53,6 +53,7 @@
 		A754A0A21B4E22C4002D0F4D /* Launch Screen.xib in Resources */ = {isa = PBXBuildFile; fileRef = A754A0A11B4E22C4002D0F4D /* Launch Screen.xib */; };
 		A754A0A61B4F6A6C002D0F4D /* GeofenceManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A754A0A51B4F6A6C002D0F4D /* GeofenceManager.swift */; };
 		A754A0A91B4F6CA5002D0F4D /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A754A0A81B4F6CA5002D0F4D /* CoreLocation.framework */; };
+		A754A0AE1B51E05C002D0F4D /* SSAlarmManager.m in Sources */ = {isa = PBXBuildFile; fileRef = A754A0AD1B51E05C002D0F4D /* SSAlarmManager.m */; };
 		E9F25F6B2A32443199ACFE26 /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C76C717EB36F4E52A2B6940E /* libPods.a */; };
 /* End PBXBuildFile section */
 
@@ -133,6 +134,8 @@
 		A754A0A51B4F6A6C002D0F4D /* GeofenceManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GeofenceManager.swift; sourceTree = "<group>"; };
 		A754A0A71B4F6B31002D0F4D /* SimpliSafe-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "SimpliSafe-Bridging-Header.h"; sourceTree = "<group>"; };
 		A754A0A81B4F6CA5002D0F4D /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
+		A754A0AC1B51E05C002D0F4D /* SSAlarmManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SSAlarmManager.h; sourceTree = "<group>"; };
+		A754A0AD1B51E05C002D0F4D /* SSAlarmManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SSAlarmManager.m; sourceTree = "<group>"; };
 		BCEBE62F0AA4AC574C90D5AB /* Pods.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.release.xcconfig; path = "Pods/Target Support Files/Pods/Pods.release.xcconfig"; sourceTree = "<group>"; };
 		C76C717EB36F4E52A2B6940E /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -316,6 +319,8 @@
 				2B2EB20A197623050093303D /* SSDashboard.m */,
 				2B2EB20C197623490093303D /* SSEvent.h */,
 				2B2EB20D197623490093303D /* SSEvent.m */,
+				A754A0AC1B51E05C002D0F4D /* SSAlarmManager.h */,
+				A754A0AD1B51E05C002D0F4D /* SSAlarmManager.m */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -538,6 +543,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				2BE183C01971A5DA00EE9DD7 /* AppDelegate.m in Sources */,
+				A754A0AE1B51E05C002D0F4D /* SSAlarmManager.m in Sources */,
 				2B2EB2041975DD270093303D /* AccountViewController.m in Sources */,
 				2B2EB20B197623050093303D /* SSDashboard.m in Sources */,
 				2B2EB20E197623490093303D /* SSEvent.m in Sources */,
