@@ -8,11 +8,12 @@
 
 #import "AppDelegate.h"
 #import "AFNetworkReachabilityManager.h"
+#import "SimpliSafe-Swift.h"
 
 #import "SSAPIClient.h"
 #import "SSUserManager.h"
 #import "Constants.h"
-#import "SimpliSafe-Swift.h"
+#import "SSAlarmManager.h"
 
 @interface AppDelegate ()
 
@@ -21,6 +22,17 @@
 @end
 
 @implementation AppDelegate
+
++ (void)presentLocalNotificationWithText:(NSString *)notificationText soundOrVibration:(BOOL)soundOrVibration
+{
+    NSAssert([notificationText length] > 0, @"Attempted to present a nil or empty local notification!");
+    UILocalNotification *notification = [[UILocalNotification alloc] init];
+    notification.alertBody = notificationText;
+    if (soundOrVibration) {
+        notification.soundName = UILocalNotificationDefaultSoundName;
+    }
+    [[UIApplication sharedApplication] presentLocalNotificationNow:notification];
+}
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
@@ -35,21 +47,46 @@
         [[SSAPIClient sharedClient] setNetworkIsReachable:(status > 0)];
     }];
     
+    UIUserNotificationSettings *notificationSettings = [UIUserNotificationSettings settingsForTypes:UIUserNotificationTypeAlert | UIUserNotificationTypeBadge | UIUserNotificationTypeSound
+                                                                                         categories:nil];
+    [application registerUserNotificationSettings:notificationSettings];
+    
     // Set up the geofence manager at app launch so that we'll be able to handle notifications when the app is launched due to
-    // a region entry/exit event.
-    self.geofenceManager = [[GeofenceManager alloc] initWithHandler:^(BOOL entered) {
-        NSString *desiredStateName = entered ? @"off" : @"away";
-        SSUserManager *userManager = [SSUserManager sharedManager];
-        NSAssert(userManager.lastSessionToken, @"Geofence Boundary Handler: No last session token!");
-        NSAssert(userManager.user, @"Geofence Boundary Handler: No user!");
-        SSAPIClient *client = [SSAPIClient sharedClient];
-        [client changeStateForLocation:userManager.currentLocation
-                                  user:userManager.user
-                                 state:desiredStateName
-                            completion:^(SSSystemState systemState, NSError *error) {
-                                
+    // a region entry/exit event. When the app is terminated/not in memory and the device enters or exits a geofenced region,
+    // the app is launched by the system, and then any CLLocationManagerDelegate (such as the GeofenceManager) will receive the
+    // relevant callbacks.
+    self.geofenceManager = [[GeofenceManager alloc] initWithHandler:^(BOOL entered)
+                            {
+                                [SSAlarmManager automaticallySetAlarmState:(entered ? SSSystemStateOff : SSSystemStateAway)
+                                                                   success:^(NSString *successText) {
+                                                                       [AppDelegate presentLocalNotificationWithText:successText soundOrVibration:YES];
+                                                                   }
+                                                                     error:^(NSString *errorText) {
+                                                                         [AppDelegate presentLocalNotificationWithText:errorText soundOrVibration:YES];
+                                                                     }];
+                            }
+                                                              error:^(CLError error)
+                            {
+                                NSString *errorMessage = nil;
+                                switch (error) {
+                                    case kCLErrorRegionMonitoringDenied:
+                                        errorMessage = @"Error: Region Monitoring Denied";
+                                        break;
+                                    case kCLErrorRegionMonitoringFailure:
+                                        errorMessage = @"Error: Region Monitoring Failure";
+                                        break;
+                                    case kCLErrorRegionMonitoringSetupDelayed:
+                                        errorMessage = @"Error: Region Monitoring Setup Delayed";
+                                        break;
+                                    case kCLErrorRegionMonitoringResponseDelayed:
+                                        errorMessage = @"Error: Region Monitoring Response Delayed";
+                                        break;
+                                    default:
+                                        errorMessage = [NSString stringWithFormat:@"Error: CLError code %@", @(error)];
+                                        break;
+                                }
+                                [AppDelegate presentLocalNotificationWithText:errorMessage soundOrVibration:YES];
                             }];
-    }];
     
     return YES;
 }
